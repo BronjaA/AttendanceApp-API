@@ -31,4 +31,6 @@ mongoose.connect(
 
 const PORT = process.env.PORT || 3000;
 
+app.get('/', function(req, res) {res.send('armin')});
+
 app.listen(PORT, () => console.log('Server Up and running!')); //ovo 3000 je zapravo port na kome se pokrece server
