@@ -57,7 +57,7 @@ router.post('/is-set-up/:token', async (req, res) => {
 
         if(verifiedStudent)
         {
-            if(verifiedStudent.subjects[0])
+            if(verifiedStudent.subjects.length > 0)
                 return res.status(200).send(true);
             else return res.status(200).send(false);
         }
