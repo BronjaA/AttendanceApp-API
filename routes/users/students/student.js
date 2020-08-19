@@ -13,6 +13,7 @@ const upisiMe = async function (data) {     // upis na predmet
         { $push: { students: data.studentID } });
 }
 
+
 const prijaviMe = async function (data) {
     const prijaviStudenta = await Activity.updateOne({_id: data.activityID},
         { $push: { attendees: data.studentID} });
@@ -45,6 +46,29 @@ router.patch('/prijavi', async (req, res) => {
         res.status(400).send(err);
     }
 });
+
+router.patch('/upisiPredmete/:token', async (req, res) => {
+    try{
+        const verifiedToken = jwt.verify(req.params.token, process.env.TOKEN_SECRET);
+
+        var userID = mongoose.Types.ObjectId;
+        userID = mongoose.Types.ObjectId(verifiedToken._id);
+
+        const verifiedStudent = await Student.findOne({user: userID});
+
+        const upisiStudentu = await Student.updateOne({user: userID}, {$set: {subjects: req.body}});
+
+        for (let i; i < req.body.length; i++)
+        {
+            const zavediPredmet = await Subject.updateOne({_id: req.body[i].subjects}, {$push: {students: verifiedStudent._id}});
+        }
+
+        res.status(200).send('Student uspesno upisan na sve predmete!');
+        
+    }catch(err){
+        res.status(400).send(err);
+    }
+})
 
 router.post('/is-set-up/:token', async (req, res) => {
     try{
