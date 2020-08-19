@@ -43,17 +43,32 @@ router.post('/get-user-subjects/:token', async (req, res) => {
         // prvo nalazi usera kojem pripada taj token
         var userID = mongoose.Types.ObjectId;
         userID = mongoose.Types.ObjectId(verifiedToken._id);
-        const verifiedUser = await User.findOne({_id: userID});
+        const verifiedStudent = await Student.findOne({user: userID});
+        const verifiedProfessor = await Professor.findOne({user: userID});
 
-        if(verifiedUser.type == 'Student')
+        if(verifiedStudent)
         {
-            const verifiedStudent = await Student.findOne({user: userID});
-            return res.status(200).send(verifiedStudent.subjects);
+            const allSubjects = verifiedStudent.subjects;
+            var foundSubjects = [];
+
+            for(let i=0; i < allSubjects.length; i++)
+            {
+                foundSubjects.push(await Subject.findOne({_id: allSubjects[i]}));
+            }
+            
+            return res.status(200).send(foundSubjects);
         }
-        else if(verifiedUser.type == 'Profesor')
+        else if(verifiedProfessor)
         {
-            const verifiedProfessor = await Professor.findOne({user: userID});
-            return res.status(200).send(verifiedProffesor.subjects);
+            const allSubjects = verifiedProfessor.subjects;
+            var foundSubjects = [];
+
+            for(let i=0; i < allSubjects.length; i++)
+            {
+                foundSubjects.push(await Subject.findOne({_id: allSubjects[i]}));
+            }
+            
+            return res.status(200).send(foundSubjects);
         }
 
     }catch(err){
