@@ -93,7 +93,7 @@ router.post('/get-profile-subjects/:token', async (req, res) => {
             const studentDepartment = verifiedStudent.department;
             const studentProfile = verifiedStudent.profile;
 
-            const subjects = await Subject.find({department: studentDepartment, profile: studentProfile});
+            const subjects = await Subject.find({department: studentDepartment, profile: studentProfile, yearOfStudy: req.body.yearOfStudy});
 
             res.status(200).send(subjects);
         }
