@@ -43,6 +43,7 @@ router.post('/get-user-subjects/:token', async (req, res) => {
         // prvo nalazi usera kojem pripada taj token
         var userID = mongoose.Types.ObjectId;
         userID = mongoose.Types.ObjectId(verifiedToken._id);
+
         const verifiedStudent = await Student.findOne({user: userID});
         const verifiedProfessor = await Professor.findOne({user: userID});
 
@@ -71,6 +72,31 @@ router.post('/get-user-subjects/:token', async (req, res) => {
             return res.status(200).send(foundSubjects);
         }
 
+    }catch(err){
+        res.status(400).send(err);
+    }
+});
+
+router.post('/get-profile-subjects/:token', async (req, res) => {
+    try{
+
+        const verifiedToken = jwt.verify(req.params.token, process.env.TOKEN_SECRET);
+
+        // prvo nalazi usera kojem pripada taj token
+        var userID = mongoose.Types.ObjectId;
+        userID = mongoose.Types.ObjectId(verifiedToken._id);
+
+        const verifiedStudent = await Student.findOne({user: userID});
+
+        if(verifiedStudent)
+        {
+            const studentDepartment = verifiedStudent.department;
+            const studentProfile = verifiedStudent.profile;
+
+            const subjects = await Subject.find({department: studentDepartment, profile: studentProfile});
+
+            res.status(200).send(subjects);
+        }
     }catch(err){
         res.status(400).send(err);
     }
