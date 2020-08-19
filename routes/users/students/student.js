@@ -56,7 +56,7 @@ router.patch('/upisiPredmete/:token', async (req, res) => {
 
         const verifiedStudent = await Student.findOne({user: userID});
 
-        const upisiStudentu = await Student.updateOne({user: userID}, {$set: {subjects: req.body}});
+        const upisiStudentu = await Student.updateOne({user: userID}, {$set: {subjects: req.body.subjects}});
 
         for (let i; i < req.body.length; i++)
         {
