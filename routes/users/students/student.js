@@ -58,9 +58,9 @@ router.patch('/upisiPredmete/:token', async (req, res) => {
 
         const upisiStudentu = await Student.updateOne({user: userID}, {$set: {subjects: req.body.subjects}});
 
-        for (let i=0; i < req.body.length; i++)
+        for (let i=0; i < req.body.subjects.length; i++)
         {
-            const zavediPredmet = await Subject.updateOne({_id: req.body[i].subjects}, {$push: {students: verifiedStudent._id}});
+            const zavediPredmet = await Subject.updateOne({_id: req.body.subjects[i]}, {$push: {students: verifiedStudent._id}});
         }
 
         res.status(200).send('Student uspesno upisan na sve predmete!');
