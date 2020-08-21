@@ -45,10 +45,7 @@ router.post('/register', async (req, res) => {    // ovo je jedna ruta - registe
         if(user.type == 'Professor')
         {
             const prof = new Professor({
-                user: user._id,
-                department: req.body.department,
-                profile: req.body.profile,
-                subjects: req.body.subjects
+                user: user._id
             });
             const savedProfessor = await prof.save();
             res.send({user: user._id});
