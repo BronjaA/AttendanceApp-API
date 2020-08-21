@@ -4,6 +4,7 @@ const Subject = require('../../../models/Subject');
 const Activity = require('../../../models/Activity');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+const { odjaviStudenta } = require('../professors/professor');
 
 const upisiMe = async function (data) {     // upis na predmet
     const upisiStudent = await Student.updateOne({_id: data.studentID},
@@ -65,6 +66,37 @@ router.patch('/upisiPredmete/:token', async (req, res) => {
 
         res.status(200).send('Student uspesno upisan na sve predmete!');
         
+    }catch(err){
+        res.status(400).send(err);
+    }
+})
+
+router.patch('/odjavi-sa-svih/:token', async (req, res) => {
+
+    try{
+
+    const verifiedToken = jwt.verify(req.params.token, process.env.TOKEN_SECRET);
+
+    var userID = mongoose.Types.ObjectId;
+    userID = mongoose.Types.ObjectId(verifiedToken._id);
+    
+    const verifiedStudent = await Student.findOne({user: userID});
+
+    const izbrisiPredmete = await Student.updateOne({user: userID}, {$set: {subjects: []}});
+
+    for (let i=0; i < req.body.subjects.length; i++)
+    {
+        const odjaviStudenta = await Subject.updateOne({_id: req.body.subjects[i]}, {$pull: {students: verifiedStudent._id}});
+    }
+
+    if(izbrisiPredmete && odjaviStudenta)
+    {
+        res.status(200).send('Student uspesno odjavljen sa svih predmeta!');
+    }
+    else{
+        res.status(400).send('Doslo je do greskse!');
+    }
+
     }catch(err){
         res.status(400).send(err);
     }
