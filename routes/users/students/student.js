@@ -69,7 +69,7 @@ router.patch('/upisiPredmete/:token', async (req, res) => {
     }catch(err){
         res.status(400).send(err);
     }
-})
+});
 
 router.patch('/odjavi-sa-svih/:token', async (req, res) => {
 
