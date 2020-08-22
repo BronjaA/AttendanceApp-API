@@ -100,6 +100,18 @@ router.post('/get-profile-subjects/:token', async (req, res) => {
     }catch(err){
         res.status(400).send(err);
     }
+});
+
+// metoda za profesora prilikom prvog biranja predmeta
+router.post('/get-specific-subjects', async (req, res) => {
+    try{
+        const subjects = await Subject.find({department: req.body.department, profile: req.body.profile, yearOfStudy: req.body.yearOfStudy});
+
+        res.status(200).send(subjects);
+
+    }catch(err){
+        res.status(400).send(err);
+    }
 })
 
 module.exports = router;
