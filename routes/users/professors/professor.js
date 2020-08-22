@@ -67,5 +67,37 @@ router.post('/is-set-up/:token', async (req, res) => {
     }
 });
 
+router.patch('/ukloni-sve/:token', async (req, res) => {
+
+    try{
+
+    const verifiedToken = jwt.verify(req.params.token, process.env.TOKEN_SECRET);
+
+    var userID = mongoose.Types.ObjectId;
+    userID = mongoose.Types.ObjectId(verifiedToken._id);
+    
+    const verifiedProfessor = await Professor.findOne({user: userID});
+
+    const izbrisiPredmete = await Professor.updateOne({user: userID}, {$set: {subjects: []}});
+
+    for (let i=0; i < req.body.subjects.length; i++)
+    {
+        const odjaviProfesora = await Subject.updateOne({_id: req.body.subjects[i]}, {$pull: {professors: verifiedProfessor._id}});
+    }
+
+    if(verifiedProfessor)
+    {
+        res.status(200).send('Profesor uspesno uklonjen sa svih predmeta!');
+    }
+    else{
+        res.status(400).send('Doslo je do greske!');
+    }
+    
+
+    }catch(err){
+        res.status(400).send(err);
+    }
+});
+
 module.exports = router;
 module.exports.odjaviStudenta = odjaviStudenta;
