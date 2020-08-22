@@ -45,5 +45,27 @@ router.patch('/dodajPredmete/:token', async (req, res) => {
     }
 });
 
+router.post('/is-set-up/:token', async (req, res) => {
+    try{
+        const verifiedToken = jwt.verify(req.params.token, process.env.TOKEN_SECRET);
+
+        var userID = mongoose.Types.ObjectId;
+        userID = mongoose.Types.ObjectId(verifiedToken._id);
+
+        const verifiedProfessor = await Professor.findOne({user: userID});
+
+        if(verifiedProfessor)
+        {
+            if(verifiedProfessor.subjects.length > 0)
+                return res.status(200).send(true);
+            else return res.status(200).send(false);
+        }
+        else res.status(400).send('User not found!');
+
+    }catch(err){
+        res.status(400).send(err);
+    }
+});
+
 module.exports = router;
 module.exports.odjaviStudenta = odjaviStudenta;
