@@ -15,6 +15,7 @@ router.post('/create', async (req, res) => {
         description: req.body.description,
         students: req.body.students,
         professors: req.body.professors,
+        activities: req.body.activities
     });
     try{
         const savedSubject = await subject.save();
