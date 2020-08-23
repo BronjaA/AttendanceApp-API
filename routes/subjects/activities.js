@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Activity = require('../../models/Activity');
+const Subject = require('../../models/Subject');
 
 router.post('/create', async (req, res) => {
     
@@ -34,6 +35,29 @@ router.post('/getByID', async (req, res) => {
     }catch(err){
         res.status(400).send(err);
     }
-})
+});
+
+router.post('/createLecture', async (req, res) => {
+    try{
+        var allActivities = [];
+        for(let i=0; i < 12; i++)
+        {
+            var activity = new Activity({
+                subject: req.body.subject,
+                type: req.body.type,
+                date: req.body.date[i],
+                aptFrom: req.body.aptFrom,
+                aptTo: req.body.aptTo,
+                location: req.body.location
+            });
+            var postavi = await activity.save();
+            allActivities.push(activity._id);
+        }
+        const upisiPredmetu = await Subject.updateOne({_id: req.body.subject}, {$push: {activities: allActivities}});
+        res.status(200).send('Uspesno dodao 12 predavanja!');
+    }catch(err){
+        res.status(400).send(err);
+    }
+});
 
 module.exports = router;

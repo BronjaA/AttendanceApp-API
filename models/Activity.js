@@ -16,11 +16,13 @@ const activitySchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    appointment: {
-        type: String,
-        required: true,
-        min: 2,
-        max: 255
+    aptFrom: {
+        type: Date,
+        required: true
+    },
+    aptTo: {
+        type: Date,
+        required: true
     },
     location: {
         type: String,
