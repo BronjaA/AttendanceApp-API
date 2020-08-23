@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Activity = require('../../../models/Activity');
 const Professor = require('../../../models/Professor');
 const Subject = require('../../../models/Subject');
+const User = require('../../../models/User');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
@@ -93,6 +94,26 @@ router.patch('/ukloni-sve/:token', async (req, res) => {
         res.status(400).send('Doslo je do greske!');
     }
     
+
+    }catch(err){
+        res.status(400).send(err);
+    }
+});
+
+router.post('/identifyProfessors', async (req, res) => {
+    try{
+
+        var identifiedProfessors = [];
+        for(let i=0; i < req.body.professors.length; i++)
+        {
+            var nadjenProf = await Professor.findOne({_id: req.body.professors[i]});
+            identifiedProfessors.push(await User.findOne({_id: nadjenProf.user}));
+        }
+
+        if(identifiedProfessors)
+        {
+            res.status(200).send(identifiedProfessors);
+        }
 
     }catch(err){
         res.status(400).send(err);
