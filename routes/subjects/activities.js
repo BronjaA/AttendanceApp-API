@@ -71,6 +71,19 @@ router.patch('/updateActivities', async (req, res) => {
     }catch(err){
         res.status(400).send(err);
     }
+});
+
+router.post('/getAttendees', async (req, res) => {
+    try{
+        var izabranaAktivnost = await Activity.findOne({_id: req.body.activity});
+
+        if(izabranaAktivnost)
+        {
+            res.status(200).send(izabranaAktivnost.attendees);
+        }
+    }catch(err){
+        res.status(400).send(err);
+    }
 })
 
 module.exports = router;
