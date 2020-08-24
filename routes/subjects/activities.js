@@ -54,10 +54,23 @@ router.post('/createLecture', async (req, res) => {
             allActivities.push(activity._id);
         }
         const upisiPredmetu = await Subject.updateOne({_id: req.body.subject}, {$push: {activities: allActivities}});
-        res.status(200).send('Uspesno dodao 12 predavanja!');
+        res.status(200).send('Uspesno dodao 12 aktivnosti!');
     }catch(err){
         res.status(400).send(err);
     }
 });
+
+router.patch('/updateActivities', async (req, res) => {
+    try{
+        for(let i = 0; i < 12; i++)
+        {
+            var updated = await Activity.updateOne({_id: req.body.activity[i]}, {$set: {date: req.body.date[i], aptFrom: req.body.aptFrom, aptTo: req.body.aptTo, location: req.body.location}});
+        }
+        if(updated)
+        res.status(200).send('Uspesno ste izmenili 12 aktivnosti');
+    }catch(err){
+        res.status(400).send(err);
+    }
+})
 
 module.exports = router;
