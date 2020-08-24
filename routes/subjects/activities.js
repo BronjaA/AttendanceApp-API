@@ -96,6 +96,20 @@ router.post('/getAttendees', async (req, res) => {
     }catch(err){
         res.status(400).send(err);
     }
+});
+
+router.post('/studentAttendee', async (req, res) => {
+    try{
+        var studenti = [];
+        for (let i=0; i < req.body.userIDs.length; i++)
+        {
+            studenti.push(await Student.findOne({user: req.body.userIDs[i]}));
+        }
+        if(studenti)
+            res.status(200).send(studenti);
+    }catch(err){
+        res.status(400).send(err);
+    }
 })
 
 module.exports = router;
