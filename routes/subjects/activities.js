@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const Activity = require('../../models/Activity');
 const Subject = require('../../models/Subject');
+const User = require('../../models/User');
+const Student = require('../../models/Student');
 
 router.post('/create', async (req, res) => {
     
@@ -77,9 +79,19 @@ router.post('/getAttendees', async (req, res) => {
     try{
         var izabranaAktivnost = await Activity.findOne({_id: req.body.activity});
 
+        var prisutniUseri = [];
         if(izabranaAktivnost)
         {
-            res.status(200).send(izabranaAktivnost.attendees);
+            //res.status(200).send(izabranaAktivnost.attendees);
+
+            for (let i = 0; i < izabranaAktivnost.attendees.length; i++)
+            {
+                var tajStudent = await Student.findOne({_id: izabranaAktivnost.attendees[i]});
+                prisutniUseri.push(await User.findOne({_id: tajStudent.user}));
+            }
+
+            if (prisutniUseri)
+                res.status(200).send(prisutniUseri);
         }
     }catch(err){
         res.status(400).send(err);
