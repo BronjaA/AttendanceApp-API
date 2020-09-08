@@ -80,18 +80,23 @@ router.post('/getAttendees', async (req, res) => {
         var izabranaAktivnost = await Activity.findOne({_id: req.body.activity});
 
         var prisutniUseri = [];
+        var prisutniStudenti = [];
         if(izabranaAktivnost)
         {
-            //res.status(200).send(izabranaAktivnost.attendees);
 
             for (let i = 0; i < izabranaAktivnost.attendees.length; i++)
             {
                 var tajStudent = await Student.findOne({_id: izabranaAktivnost.attendees[i]});
+                prisutniStudenti.push(tajStudent);
                 prisutniUseri.push(await User.findOne({_id: tajStudent.user}));
             }
 
             if (prisutniUseri)
-                res.status(200).send(prisutniUseri);
+            {
+                //res.status(200).send(prisutniUseri);
+                res.status(200).send([prisutniUseri, prisutniStudenti]);
+            }
+                
         }
     }catch(err){
         res.status(400).send(err);
