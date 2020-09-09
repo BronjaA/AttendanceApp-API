@@ -4,6 +4,7 @@ const Student = require('../../models/Student');
 const Professor = require('../../models/Professor');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+const User = require('../../models/User');
 
 router.post('/create', async (req, res) => {
     
@@ -109,6 +110,25 @@ router.post('/get-specific-subjects', async (req, res) => {
         const subjects = await Subject.find({department: req.body.department, profile: req.body.profile, yearOfStudy: req.body.yearOfStudy});
 
         res.status(200).send(subjects);
+
+    }catch(err){
+        res.status(400).send(err);
+    }
+})
+
+router.post('/get-students', async (req, res) => {
+    try{
+        const izabraniPredmet = await Subject.findOne({_id: req.body.subjID});
+
+        var upisaniStudenti = [];
+        var upisaniUseri = [];
+        for (let i=0; i < izabraniPredmet.students.length; i++)
+        {
+            var jedanStud = await Student.findOne({_id: izabraniPredmet.students[i]});
+            upisaniStudenti.push(jedanStud);
+            upisaniUseri.push(await User.findOne({_id: jedanStud.user}));
+        }
+        res.status(200).send([upisaniStudenti, upisaniUseri]);
 
     }catch(err){
         res.status(400).send(err);
