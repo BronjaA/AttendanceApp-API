@@ -167,10 +167,12 @@ router.post('/signMe/:token', async (req, res) => {
         // nalazi studenta sa kojim je povezan prethodni user
         const verifiedStudent = await Student.findOne({user: userID});
 
-        var upisan = Activity.updateOne({_id: req.body.activity}, {$push: {attendees: verifiedStudent._id}});
-
+        var upisan = await Activity.updateOne({_id: req.body.activity}, {$push: {attendees: verifiedStudent._id}});
+        
         if(upisan)
-        res.status(200);
+        {
+            res.status(200).send('hoce');
+        }
     }catch(err){
         res.status(400).send(err);
     }
