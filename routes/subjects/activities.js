@@ -155,4 +155,25 @@ router.post('/getStudentActivities/:token', async (req, res) => {
     }
 })
 
+router.post('/signMe/:token', async (req, res) => {
+    try{
+        // salje mu se id aktivitija na koji treba da se upise. UpdateOne upise se u attendees id studenta
+        const verifiedToken = jwt.verify(req.params.token, process.env.TOKEN_SECRET);
+
+        // prvo nalazi usera kojem pripada taj token
+        var userID = mongoose.Types.ObjectId;
+        userID = mongoose.Types.ObjectId(verifiedToken._id);
+
+        // nalazi studenta sa kojim je povezan prethodni user
+        const verifiedStudent = await Student.findOne({user: userID});
+
+        var upisan = Activity.updateOne({_id: req.body.activity}, {$push: {attendees: verifiedStudent._id}});
+
+        if(upisan)
+        res.status(200);
+    }catch(err){
+        res.status(400).send(err);
+    }
+})
+
 module.exports = router;
