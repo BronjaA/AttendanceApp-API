@@ -3,6 +3,8 @@ const Activity = require('../../models/Activity');
 const Subject = require('../../models/Subject');
 const User = require('../../models/User');
 const Student = require('../../models/Student');
+const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 
 router.post('/create', async (req, res) => {
     
@@ -112,6 +114,42 @@ router.post('/studentAttendee', async (req, res) => {
         }
         if(studenti)
             res.status(200).send(studenti);
+    }catch(err){
+        res.status(400).send(err);
+    }
+})
+
+router.post('/getStudentActivities/:token', async (req, res) => {
+    try{
+        const verifiedToken = jwt.verify(req.params.token, process.env.TOKEN_SECRET);
+
+        // prvo nalazi usera kojem pripada taj token
+        var userID = mongoose.Types.ObjectId;
+        userID = mongoose.Types.ObjectId(verifiedToken._id);
+
+        // nalazi studenta sa kojim je povezan prethodni user
+        const verifiedStudent = await Student.findOne({user: userID});
+
+        if(verifiedStudent)
+        {
+            const allSubjects = verifiedStudent.subjects;
+            var foundSubject;
+            var foundActivity;
+            var allAcct = [];
+
+            for(let i=0; i < allSubjects.length; i++)
+            {
+                foundSubject = await Subject.findOne({_id: allSubjects[i]});
+                
+                for (let j = 0; j < foundSubject.activities.length; j++)
+                {
+                    foundActivity = await Activity.findOne({_id: foundSubject.activities[j]});
+                    allAcct.push(foundActivity);
+                }
+            }
+
+            res.status(200).send(allAcct);
+        }
     }catch(err){
         res.status(400).send(err);
     }
