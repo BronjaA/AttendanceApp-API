@@ -148,7 +148,7 @@ router.post('/getStudentActivities/:token', async (req, res) => {
                 }
             }
 
-            res.status(200).send(allAcct);
+            res.status(200).send([allAcct, verifiedStudent._id]);
         }
     }catch(err){
         res.status(400).send(err);
