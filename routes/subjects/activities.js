@@ -178,4 +178,25 @@ router.post('/signMe/:token', async (req, res) => {
     }
 })
 
+router.post('/izbrisiStudenta', async (req, res) => {
+    try{
+        
+        const sentUser = await User.findOne({_id: req.body.userID});
+        const foundStudent = await Student.findOne({user: sentUser._id});
+
+        const aktiviti = await Activity.findOne({_id: req.body.activityID});
+
+        var izbrisi = await Activity.updateOne({_id: aktiviti._id}, {$pull: {attendees: foundStudent._id}});
+        var banuj = await Activity.updateOne({_id: aktiviti._id}, {$push: {banned: foundStudent._id}});
+
+        if(izbrisi && banuj)
+        {
+            res.status(200).send('Uspesno!');
+        }
+        
+    }catch(err){
+        res.status(400).send(err);
+    }
+})
+
 module.exports = router;
