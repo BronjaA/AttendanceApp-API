@@ -199,4 +199,21 @@ router.post('/izbrisiStudenta', async (req, res) => {
     }
 })
 
+router.post('/addStudent', async (req, res) => {
+    try{
+        
+        const student = await Student.findOne({_id: req.body.studentID});
+
+        var dodaj = await Activity.updateOne({_id: req.body.activityID}, {$push: {attendees: student._id}});
+
+        if (dodaj)
+        {
+            res.status(200).send('Uspesno!');
+        }
+        
+    }catch(err){
+        res.status(400).send(err);
+    }
+})
+
 module.exports = router;
