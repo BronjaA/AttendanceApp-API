@@ -33,6 +33,10 @@ const activitySchema = new mongoose.Schema({
     attendees: [{
         type: mongoose.Schema.Types.ObjectId,
         required: true
+    }],
+    banned: [{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
     }]
 });
 
