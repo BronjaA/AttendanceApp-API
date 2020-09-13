@@ -4,8 +4,20 @@ const Professor = require('../models/Professor');
 const Student = require('../models/Student');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const {registerValidation, loginValidation} = require('../validation'); // importuje fajl za validaciju
+
+dotenv.config();
+
+const transporter = nodemailer.createTransport({
+    service: 'hotmail',
+    auth: {
+        user: process.env.HOTMAIL_USER,
+        pass: process.env.HOTMAIL_PASSWORD,
+    }
+})
 
 //####### REGISTRACIJA #########
 router.post('/register', async (req, res) => {    // ovo je jedna ruta - register
@@ -46,7 +58,6 @@ router.post('/register', async (req, res) => {    // ovo je jedna ruta - registe
                 user: user._id
             });
             const savedProfessor = await prof.save();
-            res.send({user: user._id});
         }
         else if(user.type == 'Student')
         {
@@ -58,8 +69,26 @@ router.post('/register', async (req, res) => {    // ovo je jedna ruta - registe
                 indexNr: req.body.indexNr
             })
             const savedStudent = await student.save();
-            res.send({user: user._id});
         }
+
+        await jwt.sign(
+            { _id: user._id },
+            process.env.EMAIL_SECRET,
+            { expiresIn: '1d' },
+            (err, emailToken) => {
+                const url = ``;
+
+                transporter
+                    .sendMail({
+                        from: process.env.HOTMAIL_USER,
+                        to: user.email,
+                        subject: 'Potvrda E-Mail adrese',
+                        html: `Da bi završili proces registracije potvrdite svoju E-Mail adresu klikom na ovaj <a href="${url}">link</a>`
+                    })
+                    .catch(err);
+            }
+        );
+        res.status(200).send('Ekstra');
             
     }catch(err){
         res.status(400).send(err);
