@@ -10,20 +10,15 @@ const {registerValidation, loginValidation} = require('../validation'); // impor
 //####### REGISTRACIJA #########
 router.post('/register', async (req, res) => {    // ovo je jedna ruta - register
 
-    // Validacija unetih podataka pre kreiranja korisnika
-    const {error} = registerValidation(req.body);
-    if(error) return res.status(400).send(error.details[0].message);    // ako ima error poslace status 400 i nece
-                                                                        // izvsrit ovo dole   
-
     // Proveravamo da korisnik vec nije u bazi - proveravamo da ne bi imalo duplikata
     const emailExists = await User.findOne({email: req.body.email});    //ovo await se koristi prilikom rada s bazom
-    if(emailExists) return res.status(400).send('Email already exists');
+    if(emailExists) return res.status(400).send('Uneta E-Mail adresa već pripada nekom korisniku');
 
     const unameExists = await User.findOne({password: req.body.username});
-    if(unameExists) return res.status(400).send('Username taken');
+    if(unameExists) return res.status(400).send('Uneto korisnicko ime je zauzeto');
 
     const jmbgExists = await User.findOne({password: req.body.jmbg});
-    if(jmbgExists) return res.status(400).send('JMBG taken');
+    if(jmbgExists) return res.status(400).send('Već postoji nalog sa unetim JMBG');
 
     // Hashovanje sifre
     const salt = await bcrypt.genSalt(10);

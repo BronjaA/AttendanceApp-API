@@ -14,39 +14,27 @@ const userSchema = new mongoose.Schema({ //pravi semu, tj model kako treba da iz
     },
     name: {
         type: String,
-        required: true,
-        min: 2,
-        max: 255
+        required: true
     },
     lastName: {
         type: String,
-        required: true,
-        min: 2,
-        max: 255
+        required: true
     },
     username: {
         type: String,
-        required: true,
-        min: 4,
-        max: 255
+        required: true
     },
     password: {
         type: String,
-        required: true,
-        min: 6,
-        max: 1024
+        required: true
     },
     jmbg: {
         type: String,
-        required: true,
-        min: 13,
-        max: 255
+        required: true
     },
     email: {
         type: String,
-        required: true,
-        min: 4,
-        max: 255
+        required: true
     }
 });
 
