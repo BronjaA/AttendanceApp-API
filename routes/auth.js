@@ -76,14 +76,14 @@ router.post('/register', async (req, res) => {    // ovo je jedna ruta - registe
             process.env.EMAIL_SECRET,
             { expiresIn: '1d' },
             (err, emailToken) => {
-                const url = ``;
+                const url = `https://attendance-app997.herokuapp.com/api/user/confirmEmail/${emailToken}`;
 
                 transporter
                     .sendMail({
                         from: process.env.HOTMAIL_USER,
                         to: user.email,
                         subject: 'Potvrda E-Mail adrese',
-                        html: `Da bi završili proces registracije potvrdite svoju E-Mail adresu klikom na ovaj <a href="${url}">link</a>`
+                        html: `Da bi završili proces registracije potvrdite svoju E-Mail adresu klikom na <a href="${url}">OVAJ LINK</a>`
                     })
                     .catch(err);
             }
@@ -94,6 +94,20 @@ router.post('/register', async (req, res) => {    // ovo je jedna ruta - registe
         res.status(400).send(err);
     }
 });
+
+router.get('/confirmEmail/:etoken', async (req, res) => {
+    try{
+        const decodedToken = jwt.verify(
+            req.params.etoken,
+            process.env.EMAIL_SECRET
+        );
+        var confirmation = await User.updateOne({_id: decodedToken._id}, {$set: {verified: true}});
+        if(confirmation)
+        res.status(200).send('Uspešno ste potvrdili E-Mail!'); 
+    }catch (err){
+
+    }
+})
 
 //####### LOGIN ########
 router.post('/login', async (req, res) => {
