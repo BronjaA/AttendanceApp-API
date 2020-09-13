@@ -14,10 +14,10 @@ router.post('/register', async (req, res) => {    // ovo je jedna ruta - registe
     const emailExists = await User.findOne({email: req.body.email});    //ovo await se koristi prilikom rada s bazom
     if(emailExists) return res.status(400).send('Uneta E-Mail adresa već pripada nekom korisniku');
 
-    const unameExists = await User.findOne({password: req.body.username});
+    const unameExists = await User.findOne({username: req.body.username});
     if(unameExists) return res.status(400).send('Uneto korisnicko ime je zauzeto');
 
-    const jmbgExists = await User.findOne({password: req.body.jmbg});
+    const jmbgExists = await User.findOne({jmbg: req.body.jmbg});
     if(jmbgExists) return res.status(400).send('Već postoji nalog sa unetim JMBG');
 
     // Hashovanje sifre
