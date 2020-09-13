@@ -3,33 +3,23 @@ const mongoose = require('mongoose');
 const subjectSchema = new mongoose.Schema({
     department: [{
         type: String,
-        required: true,
-        min: 2,
-        max: 255
+        required: true
     }],
     profile: [{
         type: String,
-        required: true,
-        min: 2,
-        max: 255
+        required: true
     }],
     yearOfStudy: [{
         type: String,
-        required: true,
-        min: 2,
-        max: 255
+        required: true
     }],
     name: {
         type: String,
-        required: true,
-        min: 2,
-        max: 255
+        required: true
     },
     description: {
         type: String,
-        required: true,
-        min: 2,
-        max: 255
+        required: true
     },
     students: [{
         type: mongoose.Schema.Types.ObjectId,

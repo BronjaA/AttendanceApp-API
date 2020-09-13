@@ -8,15 +8,11 @@ const studentSchema = new mongoose.Schema({
     },
     department: {
         type: String,
-        required: true,
-        min: 4,
-        max: 255
+        required: true
     },
     profile: {
         type: String,
-        required: true,
-        min: 2,
-        max: 255
+        required: true
     },
     yearOfStudy:{
         type: String,
@@ -24,9 +20,7 @@ const studentSchema = new mongoose.Schema({
     },
     indexNr: {
         type: String,
-        required: true,
-        min: 5,
-        max: 10
+        required: true
     },
     subjects: [{
         type: mongoose.Schema.Types.ObjectId,

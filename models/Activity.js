@@ -8,9 +8,7 @@ const activitySchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        required: true,
-        min: 7,
-        max: 10
+        required: true
     },
     date: {
         type: Date,
@@ -26,9 +24,7 @@ const activitySchema = new mongoose.Schema({
     },
     location: {
         type: String,
-        required: true,
-        min: 2,
-        max: 255
+        required: true
     },
     attendees: [{
         type: mongoose.Schema.Types.ObjectId,
