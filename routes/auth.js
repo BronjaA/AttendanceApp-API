@@ -70,16 +70,13 @@ router.post('/register', async (req, res) => {    // ovo je jedna ruta - registe
 
 //####### LOGIN ########
 router.post('/login', async (req, res) => {
-    // Validacija unetih podataka
-    const {error} = loginValidation(req.body);
-    if(error) return res.status(400).send(error.details[0].message);
 
     // Proverava da li email vec postoji
     const user = await User.findOne({email: req.body.email});  // nalazi usera kod koga je email uneti email
-    if(!user) return res.status(400).send('Email or password is wrong');
+    if(!user) return res.status(400).send('Ne postoji korisnik sa unetom E-Mail adresom!');
     // Da li je sifra tacna
     const validPass = await bcrypt.compare(req.body.password, user.password);
-    if (!validPass) return res.status(400).send('Ivalid passowrd');
+    if (!validPass) return res.status(400).send('E-Mail ili šifra nisu tačne!');
 
     // Kreiranje tokena
     const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
