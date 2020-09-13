@@ -15,10 +15,13 @@ router.post('/register', async (req, res) => {    // ovo je jedna ruta - registe
     if(emailExists) return res.status(400).send('Uneta E-Mail adresa već pripada nekom korisniku');
 
     const unameExists = await User.findOne({username: req.body.username});
-    if(unameExists) return res.status(400).send('Uneto korisnicko ime je zauzeto');
+    if(unameExists) return res.status(400).send('Uneto korisničko ime je zauzeto');
 
     const jmbgExists = await User.findOne({jmbg: req.body.jmbg});
     if(jmbgExists) return res.status(400).send('Već postoji nalog sa unetim JMBG');
+
+    const indexExists = await Student.findOne({indexNr: req.body.indexNr});
+    if(indexExists) return res.status(400).send('Već postoji nalog sa unetim brojem indexa');
 
     // Hashovanje sifre
     const salt = await bcrypt.genSalt(10);
