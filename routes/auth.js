@@ -103,9 +103,9 @@ router.get('/confirmEmail/:etoken', async (req, res) => {
         );
         var confirmation = await User.updateOne({_id: decodedToken._id}, {$set: {verified: true}});
         if(confirmation)
-        res.status(200).send('Uspešno ste potvrdili E-Mail!'); 
+        res.status(200).send('<h1>Uspešno ste potvrdili E-Mail!</h1>'); 
     }catch (err){
-
+        res.status(400).send('<h1>Došlo je do greške prilikom potvrde E-Maila!</h1>');
     }
 })
 
@@ -118,6 +118,9 @@ router.post('/login', async (req, res) => {
     // Da li je sifra tacna
     const validPass = await bcrypt.compare(req.body.password, user.password);
     if (!validPass) return res.status(400).send('E-Mail ili šifra nisu tačne!');
+    // Ako nije potvrdio mejl
+    if(user.verified == false)
+    return res.status(400).send('Molimo Vas potvrdite svoju E-Mail adresu da bi se prijavili!')
 
     // Kreiranje tokena
     const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
