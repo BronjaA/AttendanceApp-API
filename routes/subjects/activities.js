@@ -216,4 +216,24 @@ router.post('/addStudent', async (req, res) => {
     }
 })
 
+router.post('/getBySubject', async (req, res) => {
+    try{
+        const sentSubject = await Subject.findOne({_id: req.body.subjectID});
+
+        var sveAktivnosti = [];
+
+        for(let i=0; i < sentSubject.activities.length; i++)
+        {
+            sveAktivnosti.push(await Activity.findOne({_id: sentSubject.activities[i]}));
+        }
+
+        if(sveAktivnosti)
+        {
+            res.status(200).send(sveAktivnosti);
+        }
+    }catch(err){
+        res.status(400).send(err);
+    }
+})
+
 module.exports = router;
