@@ -113,9 +113,9 @@ router.post('/get-specific-subjects', async (req, res) => {
 
         for (var i = 0; i<subjects.length; i++)
         {
-            for (var j = 0; j<subjects[i].department.length; j++)
+            for (var j = 0; j<subjects[i].profile.length; j++)
             {
-                if (subjects[i].department[j] == req.body.department)
+                if (subjects[i].profile[j] == req.body.profile)
                 {
                     if (subjects[i].yearOfStudy[j] == req.body.yearOfStudy)
                     praviSubjects.push(subjects[i]);
