@@ -123,7 +123,7 @@ router.post('/get-specific-subjects', async (req, res) => {
             }
         }
 
-        res.status(200).send(subjects);
+        res.status(200).send(praviSubjects);
 
     }catch(err){
         res.status(400).send(err);
