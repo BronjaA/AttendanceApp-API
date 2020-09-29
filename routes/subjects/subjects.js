@@ -109,6 +109,20 @@ router.post('/get-specific-subjects', async (req, res) => {
     try{
         const subjects = await Subject.find({department: req.body.department, profile: req.body.profile, yearOfStudy: req.body.yearOfStudy});
 
+        var praviSubjects = [];
+
+        for (var i = 0; i<subjects.length; i++)
+        {
+            for (var j = 0; j<subjects[i].department.length; j++)
+            {
+                if (subjects[i].department[j] == req.body.department)
+                {
+                    if (subjects[i].yearOfStudy[j] == req.body.yearOfStudy)
+                    praviSubjects.push(subjects[i]);
+                }
+            }
+        }
+
         res.status(200).send(subjects);
 
     }catch(err){
